@@ -500,6 +500,9 @@ class EmpireDaemon(Blueprint):
                     "EnableCloudwatchLogs",
                     Ref(RUN_LOGS),
                     "AWS::NoValue")),
+            ecs.Environment(
+                Name="EMPIRE_ELB_VPC_ID",
+                Value=Ref("VpcId")),
         ]
 
     def create_ecs_resources(self):
