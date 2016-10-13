@@ -44,7 +44,11 @@ def ecs_agent_policy():
                     ecs.DiscoverPollEndpoint,
                     ecs.Action("Submit*"),
                     ecs.Poll,
-                    ecs.Action("StartTelemetrySession")])])
+                    ecs.Action("StartTelemetrySession"),
+                    ecr:GetAuthorizationToken,
+                    ecr:BatchCheckLayerAvailability,
+                    ecr:GetDownloadUrlForLayer,
+                    ecr:BatchGetImage])])
     return p
 
 
@@ -112,6 +116,16 @@ def empire_policy(resources):
                         ecs.RegisterTaskDefinition, ecs.RunTask,
                         ecs.StartTask, ecs.StopTask, ecs.SubmitTaskStateChange,
                         ecs.UpdateService]),
+            Statement(
+                Effect=Allow,
+                Resource=["*"],
+                Action=[
+                    ecr:GetAuthorizationToken,
+                    ecr:BatchCheckLayerAvailability,
+                    ecr:GetDownloadUrlForLayer,
+                    ecr:BatchGetImage,
+                ]
+            ),
             Statement(
                 Effect=Allow,
                 # TODO: Limit to specific ELB?
