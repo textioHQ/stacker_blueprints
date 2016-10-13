@@ -95,6 +95,7 @@ stacks:
       # CidrBlock needs to be hold all of the Public & Private subnets above
       CidrBlock: 10.128.0.0/16
       ImageName: NAT
+      UseNatGateway: ${vpc_nat_type}
   - name: bastion
     class_path: stacker_blueprints.bastion.Bastion
     parameters:
@@ -156,6 +157,7 @@ stacks:
       << : *vpc_parameters
       << : *docker_params
       DesiredCount: 1
+      DockerImage: remind101/empire:0.11.0
       TaskMemory: 256
       TaskCPU: 1024
       InternalZoneId: vpc::InternalZoneId
