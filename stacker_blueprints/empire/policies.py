@@ -45,10 +45,10 @@ def ecs_agent_policy():
                     ecs.Action("Submit*"),
                     ecs.Poll,
                     ecs.Action("StartTelemetrySession"),
-                    ecr:GetAuthorizationToken,
-                    ecr:BatchCheckLayerAvailability,
-                    ecr:GetDownloadUrlForLayer,
-                    ecr:BatchGetImage])])
+                    ecr.GetAuthorizationToken,
+                    ecr.BatchCheckLayerAvailability,
+                    ecr.GetDownloadUrlForLayer,
+                    ecr.BatchGetImage])])
     return p
 
 
@@ -120,10 +120,10 @@ def empire_policy(resources):
                 Effect=Allow,
                 Resource=["*"],
                 Action=[
-                    ecr:GetAuthorizationToken,
-                    ecr:BatchCheckLayerAvailability,
-                    ecr:GetDownloadUrlForLayer,
-                    ecr:BatchGetImage,
+                    ecr.GetAuthorizationToken,
+                    ecr.BatchCheckLayerAvailability,
+                    ecr.GetDownloadUrlForLayer,
+                    ecr.BatchGetImage,
                 ]
             ),
             Statement(
