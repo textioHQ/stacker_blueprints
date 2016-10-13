@@ -5,6 +5,7 @@ logger = logging.getLogger(__name__)
 from awacs import (
     ecs,
     ec2,
+    ecr,
     iam,
     route53,
     kinesis,
