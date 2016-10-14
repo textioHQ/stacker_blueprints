@@ -414,7 +414,7 @@ class EmpireDaemon(Blueprint):
                 Value=Ref("Environment")),
             ecs.Environment(
                 Name="EMPIRE_SCHEDULER",
-                Value="cloudformation-migration"),
+                Value="cloudformation"),
             ecs.Environment(
                 Name="EMPIRE_REPORTER",
                 Value=Ref("Reporter")),
