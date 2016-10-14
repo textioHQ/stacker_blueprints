@@ -188,8 +188,8 @@ class EmpireDaemon(Blueprint):
             "type": "String",
             "description": (
                 "The cloudwatch log group to use for run logs if the "
-                "'RunLogsBackend' is set to 'cloudwatch'. If not provided, one "
-                "will be created for the run logs backend."
+                "'RunLogsBackend' is set to 'cloudwatch'. If not provided, "
+                "one will be created for the run logs backend."
             ),
             "default": ""},
         "EventsBackend": {
@@ -214,6 +214,13 @@ class EmpireDaemon(Blueprint):
                 "The number of MiB to reserve for the empire daemon task."
             ),
             "default": "1024"},
+        "TaskCPU": {
+            "type": "Number",
+            "description": (
+                "The number of CPU units to reserve for the empire daemon "
+                "task."
+            ),
+            "default": "1024"},
         "AwsDebug": {
             "type": "String",
             "description": (
@@ -221,28 +228,28 @@ class EmpireDaemon(Blueprint):
             ),
             "allowed_values": ["true", "false"],
             "default": "false"},
-        "TaskCPU": {
-            "type": "Number",
-            "description": (
-                "The number of CPU units to reserve for the empire daemon task."
-            ),
-            "default": "1024"},
         "ServiceMaximumPercent": {
             "type": "Number",
             "description": (
-                "The maximum number of tasks, specified as a percentage of the "
-                "Amazon ECS service's DesiredCount value, that can run in a "
-                "service during a deployment."
+                "The maximum number of tasks, specified as a percentage of "
+                "the Amazon ECS service's DesiredCount value, that can run "
+                "in a service during a deployment."
             ),
             "default": "200"},
         "ServiceMinimumHealthyPercent": {
             "type": "Number",
             "description": (
-                "The minimum number of tasks, specified as a percentage of the "
-                "Amazon ECS service's DesiredCount value, that must continue "
-                "to run and remain healthy during a deployment."
+                "The minimum number of tasks, specified as a percentage of "
+                "the Amazon ECS service's DesiredCount value, that must "
+                "continue to run and remain healthy during a deployment."
             ),
-            "default": "50"}
+            "default": "50"},
+        "RequireCommitMessages": {
+            "type": "String",
+            "description": "Enables requiring commit messages if set to "
+                           "'true'.",
+            'default': "false",
+        }
     }
 
     def create_template(self):
@@ -279,6 +286,9 @@ class EmpireDaemon(Blueprint):
         t.add_condition(
             "EnableAppEventStream",
             Equals(Ref("LogsStreamer"), "kinesis"))
+        t.add_condition(
+            "RequireCommitMessages",
+            Equals(Ref("RequireCommitMessages"), "true"))
 
     def create_security_groups(self):
         t = self.template
@@ -474,6 +484,9 @@ class EmpireDaemon(Blueprint):
                 Name="EMPIRE_EC2_SUBNETS_PUBLIC",
                 Value=Join(",", Ref("PublicSubnets"))),
             ecs.Environment(
+                Name='EMPIRE_ELB_VPC_ID',
+                Value=Ref('VpcId')),
+            ecs.Environment(
                 Name="EMPIRE_ELB_SG_PRIVATE",
                 Value=Ref("PrivateAppELBSG")),
             ecs.Environment(
@@ -500,9 +513,11 @@ class EmpireDaemon(Blueprint):
                     "EnableCloudwatchLogs",
                     Ref(RUN_LOGS),
                     "AWS::NoValue")),
-            ecs.Environment(
-                Name="EMPIRE_ELB_VPC_ID",
-                Value=Ref("VpcId")),
+            If(
+                'RequireCommitMessages',
+                ecs.Environment(Name='EMPIRE_MESSAGES_REQUIRED', Value='true'),
+                Ref('AWS::NoValue')
+            ),
         ]
 
     def create_ecs_resources(self):
@@ -520,7 +535,10 @@ class EmpireDaemon(Blueprint):
                         GetAtt("CustomResourcesQueue", "Arn")
                     ),
                     "TemplateBucket": (
-                        Join("", ["arn:aws:s3:::", Ref("TemplateBucket"), "/*"])
+                        Join(
+                            "",
+                            ["arn:aws:s3:::", Ref("TemplateBucket"), "/*"]
+                        )
                     )}),
                 Roles=[Ref("InstanceRole")]))
 

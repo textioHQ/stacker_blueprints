@@ -1,8 +1,7 @@
 import logging
 
-logger = logging.getLogger(__name__)
-
 from awacs import (
+    awslambda,
     ecs,
     ec2,
     ecr,
@@ -30,6 +29,8 @@ from troposphere import (
     Ref,
     Join,
 )
+
+logger = logging.getLogger(__name__)
 
 
 def ecs_agent_policy():
@@ -78,7 +79,11 @@ def empire_policy(resources):
             Statement(
                 Effect=Allow,
                 Resource=[resources['CustomResourcesQueue']],
-                Action=[sqs.ReceiveMessage, sqs.DeleteMessage]),
+                Action=[
+                    sqs.ReceiveMessage,
+                    sqs.DeleteMessage,
+                    sqs.ChangeMessageVisibility
+                ]),
             Statement(
                 Effect=Allow,
                 Resource=[resources['TemplateBucket']],
@@ -90,6 +95,27 @@ def empire_policy(resources):
                     s3.GetObjectVersion,
                     s3.GetObjectAcl,
                     s3.GetObjectVersionAcl]),
+            Statement(
+                Effect=Allow,
+                Resource=["*"],
+                Action=[
+                    awslambda.CreateFunction,
+                    awslambda.DeleteFunction,
+                    awslambda.UpdateFunctionCode,
+                    awslambda.GetFunctionConfiguration,
+                    awslambda.AddPermission,
+                    awslambda.RemovePermission]),
+            Statement(
+                Effect=Allow,
+                Resource=["*"],
+                Action=[
+                    events.PutRule,
+                    events.DeleteRule,
+                    events.DescribeRule,
+                    events.EnableRule,
+                    events.DisableRule,
+                    events.PutTargets,
+                    events.RemoveTargets]),
             Statement(
                 Effect=Allow,
                 Resource=[
@@ -162,7 +188,8 @@ def empire_policy(resources):
                 Action=[
                     kinesis.DescribeStream,
                     Action(kinesis.prefix, "Get*"),
-                    Action(kinesis.prefix, "List*")
+                    Action(kinesis.prefix, "List*"),
+                    kinesis.PutRecord,
                 ],
                 Resource=["*"]),
         ]
@@ -198,7 +225,7 @@ def logstream_policy():
 
 
 def runlogs_policy(log_group_ref):
-    """Policy needed for Empire -> Cloudwatch logs to record interactive runs."""
+    """Policy needed for Empire -> Cloudwatch logs to record run output."""
     p = Policy(
         Statement=[
             Statement(
