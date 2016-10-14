@@ -5,6 +5,7 @@ from awacs import (
     ecs,
     ec2,
     ecr,
+    events,
     iam,
     route53,
     kinesis,
