@@ -91,6 +91,17 @@ class EmpireMinion(EmpireBase):
                 "in Empire."
             ),
             "default": ""},
+        "SumoLogicId": {
+            "type": "String",
+            "description": (
+                "Access ID for SumoLogic"
+            )},
+        "SumoLogicToken": {
+            "type": "String",
+            "no_echo": True,
+            "description": (
+                "Access token for SumoLogic."
+            )},
     }
 
     def create_conditions(self):
@@ -232,6 +243,8 @@ class EmpireMinion(EmpireBase):
             "DOCKER_EMAIL=", Ref("DockerRegistryEmail"), "\n",
             "ENABLE_STREAMING_LOGS=", If("EnableStreamingLogs", "true",
                                          "false"), "\n",
+            "SUMOLOGIC_ID=", Ref("SumoLogicId"), "\n",
+            "SUMOLOGIC_TOKEN=", Ref("SumoLogicToken"), "\n",
         ]
         return seed
 
