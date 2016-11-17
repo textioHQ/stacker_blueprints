@@ -102,6 +102,23 @@ class EmpireMinion(EmpireBase):
             "description": (
                 "Access token for SumoLogic."
             )},
+        "SumoLogicCategory": {
+            "type": "String",
+            "default": "empire",
+            "description": (
+                "SourceCategory for SumoLogic to partition logs."
+            )},
+        "SumoLogicPrefix": {
+            "type": "String",
+            "default": "empire-",
+            "description": (
+                "Prefix for the SumoLogic collector name"
+            )},
+        "SumoLogicName": {
+            "type": "String",
+            "description": (
+                "Name for the SumoLogic collector"
+            )},
     }
 
     def create_conditions(self):
@@ -245,6 +262,9 @@ class EmpireMinion(EmpireBase):
                                          "false"), "\n",
             "SUMOLOGIC_ID=", Ref("SumoLogicId"), "\n",
             "SUMOLOGIC_TOKEN=", Ref("SumoLogicToken"), "\n",
+            "SUMOLOGIC_CATEGORY=", Ref("SumoLogicCategory"), "\n",
+            "SUMOLOGIC_PREFIX=", Ref("SumoLogicPrefix"), "\n",
+            "SUMOLOGIC_NAME=", Ref("SumoLogicName"), "\n",
         ]
         return seed
 
