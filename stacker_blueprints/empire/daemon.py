@@ -55,6 +55,12 @@ class EmpireDaemon(Blueprint):
         "ExternalDomain": {
             "type": "String",
             "description": "Base domain for the stack."},
+        "ExternalSubDomain": {
+            "type": "String",
+            "description": (
+                "The subdomain with the external domain to use for the stack."
+            ),
+            "default": "empire"},
         "PrivateSubnets": {
             "type": "List<AWS::EC2::Subnet::Id>",
             "description": "Subnets to deploy private instances in."},
@@ -406,7 +412,7 @@ class EmpireDaemon(Blueprint):
                 "ElbDnsRecord",
                 HostedZoneName=Join("", [Ref("ExternalDomain"), "."]),
                 Comment="Router ELB DNS",
-                Name=Join(".", ["empire", Ref("ExternalDomain")]),
+                Name=Join(".", [Ref("ExternalSubDomain"), Ref("ExternalDomain")]),
                 Type="CNAME",
                 TTL="120",
                 ResourceRecords=[GetAtt("LoadBalancer", "DNSName")]))
