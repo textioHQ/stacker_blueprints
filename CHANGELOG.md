@@ -1,3 +1,31 @@
+## 1.0.0 (2016-03-04)
+
+- New low-level security group rule blueprint [GH-56]
+- Update firehose blueprint to fully use variables [GH-57]
+- convert dynamodb to TroposphereType [GH-58]
+- Update elasticache to fully use variables [GH-59]
+- Update VPC to fully use variables [GH-60]
+- give empire daemon access to ECR [GH-70]
+- simple ECS repo blueprint [GH-72]
+- update RDS to fully use variables [GH-76]
+- Initial aurora blueprints [GH-77]
+- s3 blueprint [GH-80]
+
+## 0.7.6 (2017-01-19)
+
+- Fix empire minion ECR access [GH-70]
+- Fix SQS Queue Policy issue w/ multiple SQS queues [GH-71]
+- Simple ECR repository blueprint [GH-72]
+
+## 0.7.4 (2017-01-06)
+
+- Remove version and family checking from RDS [GH-67]
+
+## 0.7.3 (2016-11-28)
+
+- Add low-level security group rule blueprint [GH-56]
+- Relax troposphere dependency [GH-64]
+
 ## 0.7.2 (2016-10-19)
 
 - Add Elasticsearch Domain [GH-47]
