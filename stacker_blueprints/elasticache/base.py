@@ -183,22 +183,6 @@ class BaseReplicationGroup(Blueprint):
     def create_conditions(self):
         t = self.template
 
-        t.add_condition(
-            "DefinedNotificationArn",
-            Not(Equals(Ref("NotificationTopicArn"), "")))
-        t.add_condition(
-            "DefinedPort",
-            Not(Equals(Ref("Port"), "0")))
-        t.add_condition(
-            "DefinedAvailabilityZones",
-            Not(Equals(Join(",", Ref("PreferredCacheClusterAZs")), "")))
-        t.add_condition(
-            "DefinedSnapshotArns",
-            Not(Equals(Join(",", Ref("SnapshotArns")), "")))
-        t.add_condition(
-            "DefinedSnapshotWindow",
-            Not(Equals(Ref("SnapshotWindow"), "")))
-
         # DNS Conditions
         t.add_condition(
             "HasInternalZone",
