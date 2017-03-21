@@ -64,7 +64,7 @@ class EmpireDaemon(Blueprint):
             "type": CFNString,
             "description": "Base domain for the stack."},
         "ExternalSubDomain": {
-            "type": "String",
+            "type": CFNString,
             "description": (
                 "The subdomain with the external domain to use for the stack."
             ),

@@ -101,35 +101,35 @@ class EmpireMinion(EmpireBase):
             ),
             "default": ""},
         "SumoLogicId": {
-            "type": "String",
+            "type": CFNString,
             "description": (
                 "Access ID for SumoLogic"
             )},
         "SumoLogicToken": {
-            "type": "String",
+            "type": CFNString,
             "no_echo": True,
             "description": (
                 "Access token for SumoLogic."
             )},
         "SumoLogicCategory": {
-            "type": "String",
+            "type": CFNString,
             "default": "empire",
             "description": (
                 "SourceCategory for SumoLogic to partition logs."
             )},
         "SumoLogicPrefix": {
-            "type": "String",
+            "type": CFNString,
             "default": "empire-",
             "description": (
                 "Prefix for the SumoLogic collector name"
             )},
         "SumoLogicName": {
-            "type": "String",
+            "type": CFNString,
             "description": (
                 "Name for the SumoLogic collector"
             )},
         "RedisSecurityGroup": {
-            "type": "AWS::EC2::SecurityGroup::Id",
+            "type": EC2SecurityGroupId,
             "description": "Security group of Empire redis cluster."},
     }
 
