@@ -97,7 +97,8 @@ class EmpireDaemon(Blueprint):
             "description": "User for the Empire DB"},
         "DatabasePassword": {
             "type": CFNString,
-            "description": "Password for the Empire DB"},
+            "description": "Password for the Empire DB",
+            "no_echo": True},
         "ELBCertName": {
             "type": CFNString,
             "description": (
@@ -124,8 +125,7 @@ class EmpireDaemon(Blueprint):
             "description": "The IAM role to add permissions to."},
         "DockerImage": {
             "type": CFNString,
-            "description": "The docker image to run for the Empire dameon",
-            "default": "remind101/empire:master"},
+            "description": "The docker image to run for the Empire dameon"},
         "Environment": {
             "type": CFNString,
             "description": "Environment used for Empire."},
@@ -161,7 +161,8 @@ class EmpireDaemon(Blueprint):
         "TokenSecret": {
             "type": CFNString,
             "description": "EMPIRE_TOKEN_SECRET",
-            "default": ""},
+            "default": "",
+            "no_echo": True},
         "TugboatUrl": {
             "type": CFNString,
             "description": "EMPIRE_TUGBOAT_URL",
@@ -513,9 +514,6 @@ class EmpireDaemon(Blueprint):
             ecs.Environment(
                 Name="EMPIRE_ELB_SG_PUBLIC",
                 Value=Ref("PublicAppELBSG")),
-            ecs.Environment(
-                Name="EMPIRE_ELB_VPC_ID",
-                Value=Ref("VpcId")),
             ecs.Environment(
                 Name="EMPIRE_GITHUB_DEPLOYMENTS_IMAGE_BUILDER",
                 Value="conveyor"),
