@@ -4,7 +4,6 @@ from awacs import (
     awslambda,
     ecs,
     ec2,
-    ecr,
     events,
     iam,
     route53,
@@ -15,6 +14,7 @@ from awacs import (
     s3,
     cloudformation,
     elasticloadbalancing as elb,
+    ecr,
 )
 from awacs.aws import (
     Statement,
@@ -47,11 +47,20 @@ def ecs_agent_policy():
                     ecs.DiscoverPollEndpoint,
                     ecs.Action("Submit*"),
                     ecs.Poll,
-                    ecs.Action("StartTelemetrySession"),
+                    ecs.Action("StartTelemetrySession")]),
+            Statement(
+                Effect=Allow,
+                Action=[
                     ecr.GetAuthorizationToken,
                     ecr.BatchCheckLayerAvailability,
                     ecr.GetDownloadUrlForLayer,
-                    ecr.BatchGetImage])])
+                    ecr.BatchGetImage,
+                ],
+                Resource=["*"],
+            ),
+        ]
+    )
+
     return p
 
 
@@ -152,22 +161,13 @@ def empire_policy(resources):
                         ecs.UpdateService]),
             Statement(
                 Effect=Allow,
-                Resource=["*"],
-                Action=[
-                    ecr.GetAuthorizationToken,
-                    ecr.BatchCheckLayerAvailability,
-                    ecr.GetDownloadUrlForLayer,
-                    ecr.BatchGetImage,
-                ]
-            ),
-            Statement(
-                Effect=Allow,
                 # TODO: Limit to specific ELB?
                 Resource=["*"],
                 Action=[
                     elb.Action("Describe*"),
                     elb.AddTags,
                     elb.CreateLoadBalancer,
+                    elb.CreateLoadBalancerListeners,
                     elb.DescribeTags,
                     elb.DeleteLoadBalancer,
                     elb.ConfigureHealthCheck,
@@ -185,12 +185,14 @@ def empire_policy(resources):
             Statement(
                 Effect=Allow,
                 Resource=["*"],
-                Action=[ec2.DescribeSubnets, ec2.DescribeSecurityGroups]),
+                Action=[ec2.DescribeSubnets, ec2.DescribeSecurityGroups]
+            ),
             Statement(
                 Effect=Allow,
                 Action=[iam.GetServerCertificate, iam.UploadServerCertificate,
                         iam.DeleteServerCertificate, iam.PassRole],
-                Resource=["*"]),
+                Resource=["*"]
+            ),
             Statement(
                 Effect=Allow,
                 Action=[
@@ -201,7 +203,8 @@ def empire_policy(resources):
                     route53.GetChange,
                 ],
                 # TODO: Limit to specific zones
-                Resource=["*"]),
+                Resource=["*"]
+            ),
             Statement(
                 Effect=Allow,
                 Action=[
@@ -210,7 +213,18 @@ def empire_policy(resources):
                     Action(kinesis.prefix, "List*"),
                     kinesis.PutRecord,
                 ],
-                Resource=["*"]),
+                Resource=["*"]
+            ),
+            Statement(
+                Effect=Allow,
+                Action=[
+                    ecr.GetAuthorizationToken,
+                    ecr.BatchCheckLayerAvailability,
+                    ecr.GetDownloadUrlForLayer,
+                    ecr.BatchGetImage,
+                ],
+                Resource=["*"],
+            ),
         ]
     )
     return p
