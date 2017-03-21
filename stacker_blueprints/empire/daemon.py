@@ -499,9 +499,6 @@ class EmpireDaemon(Blueprint):
                 Name="EMPIRE_EC2_SUBNETS_PUBLIC",
                 Value=Join(",", Ref("PublicSubnets"))),
             ecs.Environment(
-                Name='EMPIRE_ELB_VPC_ID',
-                Value=Ref('VpcId')),
-            ecs.Environment(
                 Name="EMPIRE_ELB_SG_PRIVATE",
                 Value=Ref("PrivateAppELBSG")),
             ecs.Environment(
