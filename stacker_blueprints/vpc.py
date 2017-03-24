@@ -154,6 +154,7 @@ class VPC(Blueprint):
                     'DHCPAssociation',
                     VpcId=VPC_ID,
                     DhcpOptionsId=Ref(dhcp_options),
+                    DeletionPolicy='Retain',
                 )
             )
         else:
@@ -168,6 +169,7 @@ class VPC(Blueprint):
                     'DHCPAssociation',
                     VpcId=VPC_ID,
                     DhcpOptionsId=Ref(dhcp_options),
+                    DeletionPolicy='Retain',
                 )
             )
 
