@@ -148,6 +148,10 @@ class EmpireDaemon(Blueprint):
             "type": CFNString,
             "description": "EMPIRE_GITHUB_ORGANIZATION",
             "default": ""},
+        "GitHubTeamId": {
+            "type": CFNString,
+            "description": "EMPIRE_GITHUB_TEAM_ID",
+            "default": ""},
         "GitHubWebhooksSecret": {
             "type": CFNString,
             "description": "EMPIRE_GITHUB_WEBHOOKS_SECRET",
@@ -467,6 +471,9 @@ class EmpireDaemon(Blueprint):
             ecs.Environment(
                 Name="EMPIRE_GITHUB_ORGANIZATION",
                 Value=Ref("GitHubOrganization")),
+            ecs.Environment(
+                Name="EMPIRE_GITHUB_TEAM_ID",
+                Value=Ref("GitHubTeamId")),
             ecs.Environment(
                 Name="EMPIRE_GITHUB_WEBHOOKS_SECRET",
                 Value=Ref("GitHubWebhooksSecret")),
