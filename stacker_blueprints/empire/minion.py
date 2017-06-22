@@ -128,9 +128,6 @@ class EmpireMinion(EmpireBase):
             "description": (
                 "Name for the SumoLogic collector"
             )},
-        "RedisSecurityGroup": {
-            "type": EC2SecurityGroupId,
-            "description": "Security group of Empire redis cluster."},
     }
 
     def create_conditions(self):
@@ -204,14 +201,6 @@ class EmpireMinion(EmpireBase):
                     IpProtocol="tcp", FromPort=443, ToPort=443,
                     CidrIp="0.0.0.0/0",
                     GroupId=Ref(group_name)))
-
-        # Access to Redis cache from Minions
-        t.add_resource(
-            ec2.SecurityGroupIngress(
-                "EmpireMinionRedisAccess",
-                IpProtocol="tcp", FromPort=6379, ToPort=6379,
-                SourceSecurityGroupId=Ref(CLUSTER_SG_NAME),
-                GroupId=Ref("RedisSecurityGroup")))
 
     def build_block_device(self):
         docker_volume = autoscaling.BlockDeviceMapping(
