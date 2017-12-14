@@ -177,6 +177,7 @@ def empire_policy(resources):
                     elb.Action("CreateTargetGroup"),
                     elb.Action("CreateListener"),
                     elb.Action("DeleteListener"),
+                    elb.Action("ModifyListener"),
                     elb.Action("DeleteTargetGroup"),
                     elb.Action("ModifyTargetGroup"),
                     elb.Action("ModifyTargetGroupAttributes"),
