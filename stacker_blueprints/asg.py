@@ -189,8 +189,15 @@ class AutoscalingGroup(Blueprint):
 
     def get_launch_configuration_parameters(self):
         return {
-            'ImageId': FindInMap('AmiMap', Ref("AWS::Region"),
-                                 Ref('ImageName')),
+            'ImageId': FindInMap(
+                'AmiMap',
+                FindInMap(
+                    'AccountRegionMap',
+                    Ref("AWS::AccountId"),
+                    Ref("AWS::Region"),
+                ),
+                Ref("ImageName"),
+            ),
             'InstanceType': Ref("InstanceType"),
             'KeyName': Ref("SshKeyName"),
             'SecurityGroups': self.get_launch_configuration_security_groups(),

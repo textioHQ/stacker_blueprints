@@ -284,9 +284,14 @@ class EmpireMinion(EmpireBase):
                 "EmpireMinionLaunchConfig",
                 IamInstanceProfile=GetAtt("EmpireMinionProfile", "Arn"),
                 ImageId=FindInMap(
-                    "AmiMap",
-                    Ref("AWS::Region"),
-                    Ref("ImageName")),
+                    'AmiMap',
+                    FindInMap(
+                        'AccountRegionMap',
+                        Ref("AWS::AccountId"),
+                        Ref("AWS::Region"),
+                    ),
+                    Ref("ImageName"),
+                ),
                 BlockDeviceMappings=self.build_block_device(),
                 InstanceType=Ref("InstanceType"),
                 KeyName=Ref("SshKeyName"),

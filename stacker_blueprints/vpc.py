@@ -349,7 +349,11 @@ class VPC(Blueprint):
         else:
             image_id = FindInMap(
                 'AmiMap',
-                Ref("AWS::Region"),
+                FindInMap(
+                    'AccountRegionMap',
+                    Ref("AWS::AccountId"),
+                    Ref("AWS::Region"),
+                ),
                 Ref("ImageName")
             )
             instance_name = NAT_INSTANCE_NAME % suffix
