@@ -91,8 +91,8 @@ class Bastion(Blueprint):
                     'AmiMap',
                     FindInMap(
                         'AccountRegionMap',
-                        Ref("AWS::AccountId"),
                         Ref("AWS::Region"),
+                        Ref("AWS::AccountId"),
                     ),
                     Ref("ImageName"),
                 ),
