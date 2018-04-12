@@ -88,7 +88,14 @@ class Bastion(Blueprint):
                 'BastionLaunchConfig',
                 AssociatePublicIpAddress=True,
                 ImageId=FindInMap(
-                    'AmiMap', Ref("AWS::Region"), Ref("ImageName")),
+                    'AmiMap',
+                    FindInMap(
+                        'AccountRegionMap',
+                        Ref("AWS::Region"),
+                        Ref("AWS::AccountId"),
+                    ),
+                    Ref("ImageName"),
+                ),
                 InstanceType=Ref("InstanceType"),
                 KeyName=Ref("SshKeyName"),
                 UserData=self.generate_user_data(),

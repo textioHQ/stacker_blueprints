@@ -168,9 +168,14 @@ class EmpireController(EmpireBase):
                 "EmpireControllerLaunchConfig",
                 IamInstanceProfile=GetAtt("EmpireControllerProfile", "Arn"),
                 ImageId=FindInMap(
-                    "AmiMap",
-                    Ref("AWS::Region"),
-                    Ref("ImageName")),
+                    'AmiMap',
+                    FindInMap(
+                        'AccountRegionMap',
+                        Ref("AWS::Region"),
+                        Ref("AWS::AccountId"),
+                    ),
+                    Ref("ImageName"),
+                ),
                 BlockDeviceMappings=self.build_block_device(),
                 InstanceType=Ref("InstanceType"),
                 KeyName=Ref("SshKeyName"),
