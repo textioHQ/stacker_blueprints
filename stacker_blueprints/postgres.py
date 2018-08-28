@@ -97,7 +97,7 @@ class PostgresRDS(Blueprint):
             DBInstance(
                 db_name,
                 AllocatedStorage=Ref('AllocatedStorage'),
-                AllowMajorVersionUpgrade=False,
+                AllowMajorVersionUpgrade=True,
                 AutoMinorVersionUpgrade=True,
                 BackupRetentionPeriod=30,
                 DBName=Ref('DBName'),
