@@ -30,9 +30,9 @@ def validate_storage_type(value):
 
 
 def validate_db_instance_identifier(value):
-    l = len(value)
+    id_len = len(value)
     pattern = r"^[a-zA-Z][a-zA-Z0-9-]*$"
-    if not (0 < l < 64):
+    if not (0 < id_len < 64):
         raise ValueError("Must be between 1 and 63 characters in length.")
     if not re.match(pattern, value):
         raise ValueError("Must match pattern: %s" % pattern)

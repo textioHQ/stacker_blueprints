@@ -16,7 +16,6 @@ RDS_INSTANCE_NAME = "PostgresRDS%s"
 RDS_SUBNET_GROUP = "%sSubnetGroup"
 RDS_SG_NAME = "RdsSG%s"
 
-
 class PostgresRDS(Blueprint):
     VARIABLES = {
         'VpcId': {'type': EC2VPCId, 'description': 'Vpc Id'},
@@ -98,14 +97,14 @@ class PostgresRDS(Blueprint):
             DBInstance(
                 db_name,
                 AllocatedStorage=Ref('AllocatedStorage'),
-                AllowMajorVersionUpgrade=False,
+                AllowMajorVersionUpgrade=True,
                 AutoMinorVersionUpgrade=True,
                 BackupRetentionPeriod=30,
                 DBName=Ref('DBName'),
                 DBInstanceClass=Ref('InstanceType'),
                 DBSubnetGroupName=Ref(RDS_SUBNET_GROUP % self.name),
                 Engine='postgres',
-                EngineVersion='9.3.14',
+                EngineVersion='9.4.18',
                 MasterUsername=Ref('MasterUser'),
                 MasterUserPassword=Ref('MasterUserPassword'),
                 MultiAZ=True,
