@@ -7,7 +7,7 @@
 # the VPC you must first SSH to a bastion host, and then SSH from that host to
 # another inside the VPC.
 
-from troposphere import Ref, ec2, autoscaling, FindInMap
+from troposphere import Ref, Output, ec2, autoscaling, FindInMap
 from troposphere.autoscaling import Tag as ASTag
 from troposphere.iam import Role, InstanceProfile
 
