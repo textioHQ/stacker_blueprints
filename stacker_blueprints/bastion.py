@@ -90,7 +90,7 @@ class Bastion(Blueprint):
             autoscaling.LaunchConfiguration(
                 'BastionLaunchConfig',
                 AssociatePublicIpAddress=True,
-                IAMRole=Ref("EmpireBastionRole"),
+                IamInstanceProfile=Ref("EmpireBastionProfile"),
                 ImageId=FindInMap(
                     'AmiMap',
                     FindInMap(
