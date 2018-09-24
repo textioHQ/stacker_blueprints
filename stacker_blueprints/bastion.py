@@ -9,7 +9,7 @@
 
 from troposphere import Ref, ec2, autoscaling, FindInMap
 from troposphere.autoscaling import Tag as ASTag
-from troposphere.iam import Role, InstanceProfile, ManagedPolicyArns
+from troposphere.iam import Role, InstanceProfile
 
 from awacs.helpers.trust import get_default_assumerole_policy
 
