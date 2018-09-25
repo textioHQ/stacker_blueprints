@@ -7,8 +7,11 @@
 # the VPC you must first SSH to a bastion host, and then SSH from that host to
 # another inside the VPC.
 
-from troposphere import Ref, ec2, autoscaling, FindInMap
+from troposphere import Ref, Output, ec2, autoscaling, FindInMap
 from troposphere.autoscaling import Tag as ASTag
+from troposphere.iam import Role, InstanceProfile
+
+from awacs.helpers.trust import get_default_assumerole_policy
 
 from stacker.blueprints.base import Blueprint
 from stacker.blueprints.variables.types import (
@@ -87,6 +90,7 @@ class Bastion(Blueprint):
             autoscaling.LaunchConfiguration(
                 'BastionLaunchConfig',
                 AssociatePublicIpAddress=True,
+                IamInstanceProfile=Ref("EmpireBastionProfile"),
                 ImageId=FindInMap(
                     'AmiMap',
                     FindInMap(
@@ -110,9 +114,28 @@ class Bastion(Blueprint):
                 VPCZoneIdentifier=Ref("PublicSubnets"),
                 Tags=[ASTag('Name', 'bastion', True)]))
 
+    def create_iam_profile(self):
+        t = self.template
+        ec2_role_policy = get_default_assumerole_policy()
+        t.add_resource(
+            Role(
+                "EmpireBastionRole",
+                AssumeRolePolicyDocument=ec2_role_policy,
+                Path="/",
+                ManagedPolicyArns=["arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"]
+            ))
+        t.add_resource(
+            InstanceProfile(
+                "EmpireBastionProfile",
+                Path="/",
+                Roles=[Ref("EmpireBastionRole")]))
+        t.add_output(
+            Output("IAMRole", Value=Ref("EmpireBastionRole")))
+
     def generate_user_data(self):
         return ''
 
     def create_template(self):
+        self.create_iam_profile()
         self.create_security_groups()
         self.create_autoscaling_group()
