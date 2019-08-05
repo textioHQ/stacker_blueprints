@@ -245,7 +245,7 @@ class EmpireMinion(EmpireBase):
                 AssumeRolePolicyDocument=ec2_role_policy,
                 Path="/",
                 Policies=self.generate_iam_policies(),
-                ManagedPolicyArns=["arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"]
+                ManagedPolicyArns=["arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"]
             ))
         t.add_resource(
             InstanceProfile(
