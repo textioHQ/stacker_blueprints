@@ -45,6 +45,7 @@ def ecs_agent_policy():
                     ecs.RegisterContainerInstance,
                     ecs.DeregisterContainerInstance,
                     ecs.DiscoverPollEndpoint,
+                    ecs.TagResource,
                     ecs.Action("Submit*"),
                     ecs.Poll,
                     ecs.Action("StartTelemetrySession")]),
@@ -158,7 +159,7 @@ def empire_policy(resources):
                         ecs.Action("Describe*"), ecs.Action("List*"),
                         ecs.RegisterTaskDefinition, ecs.RunTask,
                         ecs.StartTask, ecs.StopTask, ecs.SubmitTaskStateChange,
-                        ecs.UpdateService]),
+                        ecs.TagResource, ecs.UpdateService]),
             Statement(
                 Effect=Allow,
                 # TODO: Limit to specific ELB?
